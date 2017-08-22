@@ -11,7 +11,21 @@ public class QuestionModel {
     private String choice3;
     private String choice4;
     private String userAnswer;
+
+
+
     private String correctAnswer;
+    private int userChoice;
+
+
+
+    public int getUserChoice() {
+        return userChoice;
+    }
+
+    public void setUserChoice(int userChoice) {
+        this.userChoice = userChoice;
+    }
 
     public String getQuestion() {
         return question;

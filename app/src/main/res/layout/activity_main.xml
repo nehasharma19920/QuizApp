@@ -36,38 +36,37 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:layout_height="wrap_content">
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/radioGroup"
 
-            android:layout_height="wrap_content">
-            <RadioButton
+
+            <Button
 
                 android:layout_width="match_parent"
                 android:id="@+id/choiceButton1"
                 android:text="choice1"
 
-                android:layout_height="48dp" />
-            <RadioButton
+                android:layout_height="wrap_content" />
+            <Button
                 android:layout_width="match_parent"
                 android:id="@+id/choiceButton2"
                 android:text="choice1"
+                android:layout_marginTop="12dp"
 
-                android:layout_height="48dp" />
-            <RadioButton
+
+                android:layout_height="wrap_content" />
+            <Button
                 android:layout_width="match_parent"
                 android:id="@+id/choiceButton3"
                 android:text="choice1"
+                android:layout_marginTop="12dp"
 
-                android:layout_height="48dp" />
-            <RadioButton
+                android:layout_height="wrap_content" />
+            <Button
                 android:layout_width="match_parent"
                 android:id="@+id/choiceButton4"
                 android:text="choice1"
+                android:layout_marginTop="12dp"
+                android:layout_height="wrap_content" />
 
-                android:layout_height="48dp" />
-        </RadioGroup>
         <LinearLayout
             android:layout_width="match_parent"
             android:padding="5dp"

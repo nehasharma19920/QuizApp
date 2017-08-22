@@ -2,12 +2,14 @@ package com.example.garima.quizapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ProviderInfo;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import static android.R.attr.breadCrumbShortTitle;
 import static android.R.attr.button;
 
 public class MainActivity extends AppCompatActivity  {
@@ -23,14 +26,15 @@ public class MainActivity extends AppCompatActivity  {
     private TextView questionTextView;
     private TextView previousTextView;
     private TextView nextTextView;
-    private RadioButton choiceButton1;
-    private RadioButton choiceButton2;
-    private RadioButton choiceButton3;
-    private RadioButton choiceButton4;
+    private Button choiceButton1;
+    private Button choiceButton2;
+    private Button choiceButton3;
+    private Button choiceButton4;
     private RadioGroup radioGroup;
     private  int size;
     private int count=0 ;
-    private String selectedAnswer;
+    private QuestionModel questionModel;
+
 
 
     @Override
@@ -40,7 +44,8 @@ public class MainActivity extends AppCompatActivity  {
         createData();
         getLayoutsId();
         size = questionModelsList.size();
-        updateValue(questionModelsList.get(count));
+        questionModel= questionModelsList.get(count);
+        updateValue(questionModel);
         setClickListener();
 
     }
@@ -95,11 +100,12 @@ public class MainActivity extends AppCompatActivity  {
         questionTextView = (TextView) findViewById(R.id.questionTextView);
         previousTextView = (TextView) findViewById(R.id.previousTextView);
         nextTextView = (TextView) findViewById(R.id.nextTextView);
-        choiceButton1=(RadioButton)findViewById(R.id.choiceButton1);
-        choiceButton2=(RadioButton)findViewById(R.id.choiceButton2);
-        choiceButton3=(RadioButton)findViewById(R.id.choiceButton3);
-        choiceButton4=(RadioButton)findViewById(R.id.choiceButton4);
-        radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
+        choiceButton1=(Button)findViewById(R.id.choiceButton1);
+        choiceButton2=(Button)findViewById(R.id.choiceButton2);
+        choiceButton3=(Button)findViewById(R.id.choiceButton3);
+        choiceButton4=(Button)findViewById(R.id.choiceButton4);
+        clearBackground();
+
 
 
 
@@ -118,9 +124,9 @@ public class MainActivity extends AppCompatActivity  {
                         {
 
                             count--;
-
-                            updateValue(questionModelsList.get(count));
-                            setCheckedAgain(questionModelsList.get(count));
+                           questionModel = questionModelsList.get(count);
+                            setPreviousSelectedChoice();
+                            updateValue(questionModel);
 
 
                         }
@@ -132,19 +138,13 @@ public class MainActivity extends AppCompatActivity  {
 
                         break;
                     case R.id.nextTextView:
+                        clearBackground();
                         if(count<size-1)
                         {
-                          getCheckedItem(questionModelsList.get(count));
                             count++;
-                         //   radioGroup.clearCheck();
-                            deselectAllItem();
-                            updateValue(questionModelsList.get(count));
+                            questionModel = questionModelsList.get(count);
+                            updateValue(questionModel);
                             previousTextView.setEnabled(true);
-
-
-
-
-
                         }
                         else
                         {
@@ -152,12 +152,56 @@ public class MainActivity extends AppCompatActivity  {
                            showDialog();
                         }
                         break;
+                    case R.id.choiceButton1:
+                        choiceButton1.setBackgroundDrawable(getResources().getDrawable(R.color.choiceColor));
+                        choiceButton2.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        choiceButton3.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        choiceButton4.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        questionModel.setUserAnswer(choiceButton1.getText().toString());
+                        questionModel.setUserChoice(1);
+                        questionModelsList.set(count,questionModel);
+                        break;
+                    case R.id.choiceButton2:
+                        choiceButton2.setBackgroundDrawable(getResources().getDrawable(R.color.choiceColor));
+                        choiceButton1.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        choiceButton3.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        choiceButton4.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        questionModel.setUserAnswer(choiceButton2.getText().toString());
+                        questionModel.setUserChoice(2);
+                        questionModelsList.set(count,questionModel);
+
+                        break;
+                    case R.id.choiceButton3:
+                        choiceButton3.setBackgroundDrawable(getResources().getDrawable(R.color.choiceColor));
+                        choiceButton2.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        choiceButton4.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        choiceButton1.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        questionModel.setUserAnswer(choiceButton3.getText().toString());
+                        questionModel.setUserChoice(3);
+                        questionModelsList.set(count,questionModel);
+
+                        break;
+                    case R.id.choiceButton4:
+                        choiceButton4.setBackgroundDrawable(getResources().getDrawable(R.color.choiceColor));
+                        choiceButton2.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        choiceButton3.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        choiceButton1.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                        questionModel.setUserAnswer(choiceButton4.getText().toString());
+                        questionModel.setUserChoice(4);
+                        questionModelsList.set(count,questionModel);
+
+
+                        break;
                 }
 
             }
         };
         previousTextView.setOnClickListener(clickListener);
         nextTextView.setOnClickListener(clickListener);
+        choiceButton1.setOnClickListener(clickListener);
+        choiceButton2.setOnClickListener(clickListener);
+        choiceButton3.setOnClickListener(clickListener);
+        choiceButton4.setOnClickListener(clickListener);
     }
     private void updateValue(QuestionModel questionModel)
     {
@@ -193,59 +237,65 @@ public class MainActivity extends AppCompatActivity  {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
-    private void setCheckedAgain(QuestionModel questionModel)
+    private void clearBackground()
     {
-        String answer = questionModel.getUserAnswer();
-        for(int j=0; j<radioGroup.getChildCount(); j++) {
-            RadioButton btn = (RadioButton) radioGroup.getChildAt(j);
-            if(btn.getText().toString().equalsIgnoreCase(answer)) {
-               btn.setChecked(true);
-                return;
-            }
+        choiceButton1.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+        choiceButton2.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+        choiceButton3.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+        choiceButton4.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+
+    }
+    private  void setPreviousSelectedChoice()
+    {
+        int selectedChoice = questionModel.getUserChoice();
+        switch (selectedChoice)
+        {
+            case 1:
+                choiceButton1.setBackgroundDrawable(getResources().getDrawable(R.color.choiceColor));
+                choiceButton2.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                choiceButton3.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                choiceButton4.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                questionModel.setUserAnswer(choiceButton1.getText().toString());
+                questionModel.setUserChoice(1);
+                questionModelsList.set(count,questionModel);
+
+                break;
+            case 2:
+                choiceButton2.setBackgroundDrawable(getResources().getDrawable(R.color.choiceColor));
+                choiceButton1.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                choiceButton3.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                choiceButton4.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                questionModel.setUserAnswer(choiceButton2.getText().toString());
+                questionModel.setUserChoice(2);
+                questionModelsList.set(count,questionModel);
+                break;
+            case 3:
+                choiceButton3.setBackgroundDrawable(getResources().getDrawable(R.color.choiceColor));
+                choiceButton2.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                choiceButton4.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                choiceButton1.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                questionModel.setUserAnswer(choiceButton3.getText().toString());
+                questionModel.setUserChoice(3);
+                questionModelsList.set(count,questionModel);
+                break;
+            case 4:
+                choiceButton4.setBackgroundDrawable(getResources().getDrawable(R.color.choiceColor));
+                choiceButton2.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                choiceButton3.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                choiceButton1.setBackgroundDrawable(getResources().getDrawable(android.R.color.darker_gray));
+                questionModel.setUserAnswer(choiceButton4.getText().toString());
+                questionModel.setUserChoice(4);
+                questionModelsList.set(count,questionModel);
+                break;
+            default:
+                clearBackground();
+                break;
 
         }
+
     }
-
- private void getCheckedItem(QuestionModel questionModel)
- {
-  if(choiceButton1.isChecked())
-  {
-      questionModel.setUserAnswer(choiceButton1.getText().toString());
-      questionModelsList.set(count,questionModel);
-  }
-  else if(choiceButton2.isChecked())
-  {
-      questionModel.setUserAnswer(choiceButton2.getText().toString());
-      questionModelsList.set(count,questionModel);
-
-  }
-  else if(choiceButton3.isChecked())
-  {
-      questionModel.setUserAnswer(choiceButton3.getText().toString());
-      questionModelsList.set(count,questionModel);
-
-  }
-  else if(choiceButton4.isChecked())
-  {
-      questionModel.setUserAnswer(choiceButton4.getText().toString());
-      questionModelsList.set(count,questionModel);
-
-  }
-  else
-  {
-      questionModel.setUserAnswer(null);
-      questionModelsList.set(count,questionModel);
-
-  }
- }
- private void deselectAllItem()
- {
-     choiceButton1.setChecked(false);
-     choiceButton2.setChecked(false);
-     choiceButton3.setChecked(false);
-     choiceButton4.setChecked(false);
  }
 
 
-}
+
+
